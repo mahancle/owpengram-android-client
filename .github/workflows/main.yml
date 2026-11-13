@@ -23,19 +23,28 @@ jobs:
         with:
           packages: 'platforms;android-36 build-tools;36.0.0 ndk;27.2.12479018'
 
+      - name: Generate Keystore
+        run: |
+          keytool -genkey -v -keystore TMessagesProj/config/release.keystore -alias mobugram -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=Mobugram, OU=Dev, O=Mobugram, L=City, S=State, C=US"
+          cp TMessagesProj/config/release.keystore TMessagesProj/config/debug.keystore || true
+
       - name: Change App Name to mobugram
         run: |
           find . -name "strings.xml" -exec sed -i 's/>OwpenGram</>mobugram</g' {} +
 
-      - name: Inject API Keys
+      - name: Inject API Keys & Signing Config
         run: |
           echo "APP_ID=${{ secrets.APP_ID }}" >> gradle.properties
           echo "APP_HASH=${{ secrets.APP_HASH }}" >> gradle.properties
+          echo "RELEASE_STORE_FILE=config/release.keystore" >> gradle.properties
+          echo "RELEASE_STORE_PASSWORD=123456" >> gradle.properties
+          echo "RELEASE_KEY_ALIAS=mobugram" >> gradle.properties
+          echo "RELEASE_KEY_PASSWORD=123456" >> gradle.properties
 
-      - name: Build Standalone Debug APK
+      - name: Build Standalone APK
         run: |
           chmod +x gradlew
-          ./gradlew :TMessagesProj_AppStandalone:assembleDebug --stacktrace
+          ./gradlew :TMessagesProj_AppStandalone:assembleAfatDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

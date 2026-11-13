@@ -32,6 +32,11 @@ jobs:
         run: |
           find . -name "strings.xml" -exec sed -i 's/>OwpenGram</>mobugram</g' {} +
 
+      - name: Replace App Icon with logo.png
+        run: |
+          find TMessagesProj* -type f \( -name "ic_launcher*.png" -o -name "ic_launcher*.webp" \) -exec cp logo.png {} \;
+          find TMessagesProj* -type f -name "ic_launcher*.xml" -delete
+
       - name: Inject API Keys & Signing Config
         run: |
           echo "APP_ID=${{ secrets.APP_ID }}" >> gradle.properties

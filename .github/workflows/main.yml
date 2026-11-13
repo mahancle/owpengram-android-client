@@ -32,10 +32,10 @@ jobs:
           echo "APP_ID=${{ secrets.APP_ID }}" >> gradle.properties
           echo "APP_HASH=${{ secrets.APP_HASH }}" >> gradle.properties
 
-      - name: Build Standalone APK
+      - name: Build Standalone Debug APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleAppStandaloneRelease --stacktrace
+          ./gradlew assembleAppStandaloneDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

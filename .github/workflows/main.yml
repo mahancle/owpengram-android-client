@@ -35,7 +35,7 @@ jobs:
       - name: Build Standalone Debug APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleAppStandaloneDebug --stacktrace
+          ./gradlew :TMessagesProj_AppStandalone:assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
